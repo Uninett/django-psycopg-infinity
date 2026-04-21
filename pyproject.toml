@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "django-pg-infinity"
+version = "0.1.0"
+description = "Django field and PostgreSQL backend for infinity timestamp support with psycopg3"
+authors = [{name = "Sikt", email = "kontakt@sikt.no"}]
+license = "GPL-3.0-or-later"
+readme = "README.rst"
+requires-python = ">=3.10"
+dependencies = [
+    "Django>=5.2",
+    "psycopg>=3.1",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Framework :: Django",
+    "Framework :: Django :: 5.2",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Database",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.optional-dependencies]
+test = [
+    "tox",
+    "coverage",
+]
+
+[project.urls]
+Source = "https://github.com/Uninett/django-pg-infinity"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/django_pg_infinity"]
