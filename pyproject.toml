@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
 name = "django-psycopg-infinity"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Django field and PostgreSQL backend for infinity timestamp support with psycopg3"
 authors = [{name = "Sikt", email = "kontakt@sikt.no"}]
 license = "Apache-2.0"
@@ -37,6 +37,12 @@ test = [
 
 [project.urls]
 Source = "https://github.com/Uninett/django-psycopg-infinity"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/django_psycopg_infinity/_version.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/django_psycopg_infinity"]

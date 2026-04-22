@@ -16,3 +16,4 @@ coverage.xml
 PLAN.md
 .env
 uv.lock
+src/django_psycopg_infinity/_version.py
