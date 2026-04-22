@@ -1,6 +1,6 @@
-====================
+=======================
 django-psycopg-infinity
-====================
+=======================
 
 Django field and PostgreSQL backend for infinity timestamp support with psycopg >=3.
 
