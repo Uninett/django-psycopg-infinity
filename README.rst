@@ -1,5 +1,5 @@
 ====================
-django-pg-infinity
+django-psycopg-infinity
 ====================
 
 Django field and PostgreSQL backend for infinity timestamp support with psycopg3.
@@ -13,7 +13,7 @@ Installation
 
 .. code-block:: bash
 
-    pip install django-pg-infinity
+    pip install django-psycopg-infinity
 
 Configuration
 =============
@@ -24,7 +24,7 @@ Set the custom database backend in your Django settings:
 
     DATABASES = {
         "default": {
-            "ENGINE": "django_pg_infinity.backends.postgresql",
+            "ENGINE": "django_psycopg_infinity.backends.postgresql",
             # ... other settings
         },
     }
@@ -34,7 +34,7 @@ Then use ``DateTimeInfinityField`` in your models:
 .. code-block:: python
 
     from django.db import models
-    from django_pg_infinity.fields import DateTimeInfinityField
+    from django_psycopg_infinity.fields import DateTimeInfinityField
 
     class MyModel(models.Model):
         valid_until = DateTimeInfinityField(null=True, blank=True)

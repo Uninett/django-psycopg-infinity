@@ -3,7 +3,7 @@ from datetime import datetime
 from django.test import SimpleTestCase
 from django.utils.timezone import is_aware
 
-from django_pg_infinity.utils import (
+from django_psycopg_infinity.utils import (
     INFINITY,
     INFINITY_REPR,
     NEGATIVE_INFINITY,

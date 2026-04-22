@@ -6,7 +6,7 @@ from psycopg.abc import Loader
 from psycopg.postgres import types
 from psycopg.pq import Format
 
-from django_pg_infinity.utils import INFINITY, NEGATIVE_INFINITY
+from django_psycopg_infinity.utils import INFINITY, NEGATIVE_INFINITY
 
 
 TIMESTAMPTZ_OID = types["timestamptz"].oid

@@ -14,8 +14,8 @@ INSTALLED_APPS = [
 
 DATABASES = {
     "default": {
-        "ENGINE": "django_pg_infinity.backends.postgresql",
-        "NAME": os.environ.get("POSTGRES_DB", "django_pg_infinity_test"),
+        "ENGINE": "django_psycopg_infinity.backends.postgresql",
+        "NAME": os.environ.get("POSTGRES_DB", "django_psycopg_infinity_test"),
         "USER": os.environ.get("POSTGRES_USER", "postgres"),
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD", ""),
         "HOST": os.environ.get("POSTGRES_HOST", "localhost"),

@@ -1,6 +1,6 @@
 from django.db import models
 
-from django_pg_infinity.fields import DateTimeInfinityField
+from django_psycopg_infinity.fields import DateTimeInfinityField
 
 
 class TestEvent(models.Model):

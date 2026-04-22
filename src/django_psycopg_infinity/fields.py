@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.db import models
 
-from django_pg_infinity import utils
+from django_psycopg_infinity import utils
 
 
 class DateTimeInfinityField(models.DateTimeField):

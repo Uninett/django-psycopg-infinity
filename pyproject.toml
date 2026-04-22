@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "django-pg-infinity"
+name = "django-psycopg-infinity"
 version = "0.1.0"
 description = "Django field and PostgreSQL backend for infinity timestamp support with psycopg3"
 authors = [{name = "Sikt", email = "kontakt@sikt.no"}]
@@ -36,7 +36,7 @@ test = [
 ]
 
 [project.urls]
-Source = "https://github.com/Uninett/django-pg-infinity"
+Source = "https://github.com/Uninett/django-psycopg-infinity"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/django_pg_infinity"]
+packages = ["src/django_psycopg_infinity"]
