@@ -61,6 +61,28 @@ Usage
     obj.refresh_from_db()
     assert obj.valid_until.replace(tzinfo=None) == datetime.max
 
+Convenience constants
+=====================
+
+The package avoids calling ``timezone.get_default_timezone()`` at import time
+so it can be imported before Django is fully configured. If you need
+timezone-aware infinity sentinels (e.g. for model field defaults), derive them
+in your own module:
+
+.. code-block:: python
+
+    from django_psycopg_infinity.utils import INFINITY, NEGATIVE_INFINITY, make_aware
+
+    LOCAL_INFINITY = make_aware(INFINITY)
+    LOCAL_NEGATIVE_INFINITY = make_aware(NEGATIVE_INFINITY)
+
+Then use them as defaults:
+
+.. code-block:: python
+
+    class MyModel(models.Model):
+        end_time = DateTimeInfinityField(default=LOCAL_INFINITY)
+
 Development
 ===========
 
