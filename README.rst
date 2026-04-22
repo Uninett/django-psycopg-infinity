@@ -68,6 +68,18 @@ Tests require a running PostgreSQL instance:
     cp .env.example .env   # edit as needed
     uv run runtests.py
 
+Releasing
+=========
+
+Releases are published to PyPI automatically when a version tag is pushed.
+The CI runs the full test suite before publishing.
+
+Create a new release on GitHub with a ``v``-prefixed tag (e.g. ``v0.1.0``)
+and the workflow handles the rest.
+
+Versioning is derived from git tags via ``hatch-vcs`` — there are no version
+strings to update manually.
+
 License
 =======
 
