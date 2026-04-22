@@ -9,8 +9,6 @@ USE_TZ = True
 TIME_ZONE = "UTC"
 
 INSTALLED_APPS = [
-    "django.contrib.contenttypes",
-    "django.contrib.auth",
     "tests",
 ]
 
