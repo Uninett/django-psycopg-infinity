@@ -61,16 +61,12 @@ Usage
 Development
 ===========
 
-Tests require a running PostgreSQL instance. Configure via environment variables:
+Tests require a running PostgreSQL instance:
 
 .. code-block:: bash
 
-    export POSTGRES_DB=django_pg_infinity_test
-    export POSTGRES_USER=postgres
-    export POSTGRES_HOST=localhost
-
-    pip install -e ".[test]"
-    python runtests.py
+    cp .env.example .env   # edit as needed
+    uv run runtests.py
 
 License
 =======
