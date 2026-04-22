@@ -75,4 +75,4 @@ Tests require a running PostgreSQL instance. Configure via environment variables
 License
 =======
 
-GPL-3.0-or-later
+Apache-2.0

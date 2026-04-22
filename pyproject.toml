@@ -7,7 +7,7 @@ name = "django-pg-infinity"
 version = "0.1.0"
 description = "Django field and PostgreSQL backend for infinity timestamp support with psycopg3"
 authors = [{name = "Sikt", email = "kontakt@sikt.no"}]
-license = "GPL-3.0-or-later"
+license = "Apache-2.0"
 readme = "README.rst"
 requires-python = ">=3.10"
 dependencies = [
@@ -19,7 +19,7 @@ classifiers = [
     "Framework :: Django",
     "Framework :: Django :: 5.2",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
