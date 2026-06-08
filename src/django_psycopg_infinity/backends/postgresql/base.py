@@ -26,22 +26,31 @@ class DatabaseWrapper(DjangoDatabaseWrapper):
     def get_new_connection(self, conn_params):
         conn = super().get_new_connection(conn_params)
 
-        _register_inf_loaders(conn.adapters, TIMESTAMPTZ_OID, Format.TEXT, Format.BINARY)
-        _register_inf_loaders(conn.adapters, TIMESTAMP_OID, Format.TEXT, Format.BINARY)
+        # Each OID is registered with sentinels matching its column tz-ness:
+        # `timestamptz` columns return tz-aware values, `timestamp` columns
+        # return naive values. The infinity loaders must match.
+        _register_inf_loaders(
+            conn.adapters, TIMESTAMPTZ_OID, Format.TEXT, Format.BINARY,
+            INFINITY_UTC, NEGATIVE_INFINITY_UTC,
+        )
+        _register_inf_loaders(
+            conn.adapters, TIMESTAMP_OID, Format.TEXT, Format.BINARY,
+            INFINITY, NEGATIVE_INFINITY,
+        )
 
         return conn
 
 
-def _register_inf_loaders(adapters, oid, text_format, binary_format):
+def _register_inf_loaders(adapters, oid, text_format, binary_format, inf_value, neg_inf_value):
     """Register infinity-aware loaders that subclass the already-registered ones."""
     current_text_cls = adapters.get_loader(oid, text_format)
     current_binary_cls = adapters.get_loader(oid, binary_format)
-    adapters.register_loader(oid, _make_inf_loader(current_text_cls, INFINITY_TEXT, NEGATIVE_INFINITY_TEXT))
-    adapters.register_loader(oid, _make_inf_loader(current_binary_cls, INFINITY_BINARY, NEGATIVE_INFINITY_BINARY))
+    adapters.register_loader(oid, _make_inf_loader(current_text_cls, INFINITY_TEXT, NEGATIVE_INFINITY_TEXT, inf_value, neg_inf_value))
+    adapters.register_loader(oid, _make_inf_loader(current_binary_cls, INFINITY_BINARY, NEGATIVE_INFINITY_BINARY, inf_value, neg_inf_value))
 
 
 @functools.lru_cache(maxsize=8)
-def _make_inf_loader(parent_class, inf_text, neg_inf_text):
+def _make_inf_loader(parent_class, inf_text, neg_inf_text, inf_value, neg_inf_value):
     """Create an infinity-aware loader.
 
     Tries subclassing first (works for pure-Python loaders and preserves
@@ -55,9 +64,9 @@ def _make_inf_loader(parent_class, inf_text, neg_inf_text):
         class InfLoader(parent_class):
             def load(self, data):
                 if data == inf_text:
-                    return INFINITY_UTC
+                    return inf_value
                 if data == neg_inf_text:
-                    return NEGATIVE_INFINITY_UTC
+                    return neg_inf_value
                 return super().load(data)
 
         # Access .format to verify the subclass inherited it correctly
@@ -76,9 +85,9 @@ def _make_inf_loader(parent_class, inf_text, neg_inf_text):
 
             def load(self, data):
                 if data == inf_text:
-                    return INFINITY_UTC
+                    return inf_value
                 if data == neg_inf_text:
-                    return NEGATIVE_INFINITY_UTC
+                    return neg_inf_value
                 return self._delegate.load(data)
 
         # Copy the timezone attribute that Django inspects on the loader
