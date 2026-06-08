@@ -27,8 +27,15 @@ class DateTimeInfinityField(models.DateTimeField):
     def from_db_value(self, value, expression, connection):
         if value is None:
             return value
+        if isinstance(value, datetime):
+            # The psycopg loader has already applied correct tz semantics for
+            # the column type — both for ordinary datetimes and for our
+            # infinity sentinels. Re-running through get_infinity_time() or
+            # convert_datetimefield_value() would force make_aware() on
+            # values loaded from `timestamp without time zone` columns.
+            return value
 
-        return utils.get_infinity_time(value) or utils.convert_datetimefield_value(value, connection)
+        return utils.convert_datetimefield_value(value, connection)
 
     def to_python(self, value):
         return utils.get_infinity_time(value) or super().to_python(value)

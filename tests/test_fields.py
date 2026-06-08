@@ -1,11 +1,12 @@
+import warnings
 from datetime import datetime, timedelta
 
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone
-from django.utils.timezone import is_aware, make_aware
+from django.utils.timezone import is_aware, is_naive, make_aware
 
-from tests.models import TestEvent
+from tests.models import NaiveColumnEvent, TestEvent
 
 
 class DateTimeInfinityFieldTests(TestCase):
@@ -100,3 +101,51 @@ class DateTimeInfinityFieldTests(TestCase):
 
         self.assertFalse(TestEvent.objects.filter(end_time__lt="-infinity").exists())
         self.assertFalse(TestEvent.objects.filter(end_time__gt="infinity").exists())
+
+
+class DateTimeInfinityFieldOverNaiveColumnTests(TestCase):
+    """Round-trip tests for `DateTimeInfinityField` over `timestamp without time zone`.
+
+    The loader for OID 1114 must return naive datetimes matching the column type;
+    the field must not re-aware them on the way back to Python.
+    """
+
+    def setUp(self):
+        self.event = NaiveColumnEvent.objects.create(name="event")
+
+    def _save_end_time(self, end_time):
+        self.event.end_time = end_time
+        # The test deliberately exercises naive datetimes over a `timestamp`
+        # column under whatever USE_TZ the test suite happens to run with.
+        # Django emits this specific RuntimeWarning when USE_TZ=True and a
+        # naive datetime is written to a tz-naive column; that warning is
+        # expected here and only here.
+        with warnings.catch_warnings():
+            warnings.filterwarnings(
+                "ignore",
+                message=r".*received a naive datetime.*",
+                category=RuntimeWarning,
+            )
+            self.event.save(update_fields=["end_time"])
+
+    def _assert_round_trips_naive(self, insert_value, expected):
+        self._save_end_time(insert_value)
+        self.event.refresh_from_db()
+        self.assertTrue(is_naive(self.event.end_time))
+        self.assertEqual(self.event.end_time, expected)
+
+    def test_when_saving_ordinary_datetime_then_round_trips_naive(self):
+        ordinary = datetime(2026, 1, 15, 12, 0)
+        self._assert_round_trips_naive(ordinary, ordinary)
+
+    def test_when_saving_datetime_max_then_round_trips_as_naive_infinity(self):
+        self._assert_round_trips_naive(datetime.max, datetime.max)
+
+    def test_when_saving_datetime_min_then_round_trips_as_naive_negative_infinity(self):
+        self._assert_round_trips_naive(datetime.min, datetime.min)
+
+    def test_when_saving_infinity_string_then_round_trips_as_naive_datetime_max(self):
+        self._assert_round_trips_naive("infinity", datetime.max)
+
+    def test_when_saving_negative_infinity_string_then_round_trips_as_naive_datetime_min(self):
+        self._assert_round_trips_naive("-infinity", datetime.min)
