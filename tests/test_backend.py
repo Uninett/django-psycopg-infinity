@@ -32,17 +32,19 @@ class InfinityTimestampLoaderTests(TestCase):
             result = cur.fetchone()[0]
         self.assertEqual(result, expected)
 
-    def test_when_loading_infinity_timestamp_then_returns_datetime_max(self):
+    def test_when_loading_infinity_timestamp_then_returns_naive_datetime_max(self):
         with connection.cursor() as cur:
             cur.execute("SELECT 'infinity'::timestamp")
             result = cur.fetchone()[0]
-        self.assertEqual(result.replace(tzinfo=None), datetime.max)
+        self.assertIsNone(result.tzinfo)
+        self.assertEqual(result, datetime.max)
 
-    def test_when_loading_negative_infinity_timestamp_then_returns_datetime_min(self):
+    def test_when_loading_negative_infinity_timestamp_then_returns_naive_datetime_min(self):
         with connection.cursor() as cur:
             cur.execute("SELECT '-infinity'::timestamp")
             result = cur.fetchone()[0]
-        self.assertEqual(result.replace(tzinfo=None), datetime.min)
+        self.assertIsNone(result.tzinfo)
+        self.assertEqual(result, datetime.min)
 
     def test_when_inserting_infinity_via_param_then_round_trips(self):
         with connection.cursor() as cur:

@@ -57,9 +57,11 @@ Usage
     obj.valid_until = "infinity"
     obj.save()
 
-    # Retrieve - always returns an aware datetime
+    # Retrieve - the returned datetime matches the column type:
+    # aware (UTC) for `timestamp with time zone` columns,
+    # naive for `timestamp without time zone` columns.
     obj.refresh_from_db()
-    assert obj.valid_until.replace(tzinfo=None) == datetime.max
+    assert obj.valid_until == datetime.max
 
 Convenience constants
 =====================
@@ -82,6 +84,10 @@ Then use them as defaults:
 
     class MyModel(models.Model):
         end_time = DateTimeInfinityField(default=LOCAL_INFINITY)
+
+For fields backed by ``timestamp without time zone`` columns, use the bare
+``INFINITY`` / ``NEGATIVE_INFINITY`` constants instead — a tz-aware default
+would mismatch the naive values that the loader returns from those columns.
 
 Development
 ===========
