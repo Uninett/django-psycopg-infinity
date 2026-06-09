@@ -36,7 +36,8 @@ test = [
 ]
 
 [project.urls]
-Source = "https://github.com/Uninett/django-psycopg-infinity"
+"GitHub" = "https://github.com/Uninett/django-psycopg-infinity"
+"Changelog" = "https://github.com/Uninett/django-psycopg-infinity/blob/master/CHANGELOG.md"
 
 [tool.hatch.version]
 source = "vcs"
